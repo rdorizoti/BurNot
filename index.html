@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BurNot — Criar conta</title>
+  <style>
+    :root {
+      --bg: #f6f3fb;
+      --bg-glow-1: rgba(167, 139, 250, 0.16);
+      --bg-glow-2: rgba(196, 181, 253, 0.14);
+      --card-bg: rgba(251, 249, 255, 0.94);
+      --input-bg: #f2eef9;
+      --border: #ddd4ef;
+      --border-soft: rgba(124, 92, 191, 0.18);
+      --text: #271e3d;
+      --text-strong: #1b1330;
+      --text-muted: #655a82;
+      --text-dim: #897ea6;
+      --accent: #7c5cbf;
+      --accent-2: #6847ad;
+      --accent-hover-1: #6e4db3;
+      --accent-hover-2: #58399c;
+      --accent-ring: rgba(124, 92, 191, 0.18);
+      --accent-shadow: rgba(104, 71, 173, 0.22);
+      --badge-bg: #ede6fa;
+      --badge-border: rgba(124, 92, 191, 0.22);
+      --badge-text: #5b3fa1;
+      --ok: #15803d;
+      --warn: #b45309;
+      --weak: #b91c1c;
+      --bar-track: #e6def5;
+      --shadow: 0 22px 45px -18px rgba(67, 46, 117, 0.18);
+      --night-sky-opacity: 0;
+    }
+
+    body.night-mode {
+      --bg: #110b1d;
+      --bg-glow-1: rgba(139, 92, 246, 0.16);
+      --bg-glow-2: rgba(168, 85, 247, 0.11);
+      --card-bg: rgba(26, 17, 45, 0.90);
+      --input-bg: rgba(14, 9, 26, 0.78);
+      --border: #332354;
+      --border-soft: rgba(167, 139, 250, 0.18);
+      --text: #ede8fa;
+      --text-strong: #ffffff;
+      --text-muted: #b3a6d4;
+      --text-dim: #8375a8;
+      --accent: #9f7aea;
+      --accent-2: #805ad5;
+      --accent-hover-1: #b794f4;
+      --accent-hover-2: #9f7aea;
+      --accent-ring: rgba(159, 122, 234, 0.22);
+      --accent-shadow: rgba(128, 90, 213, 0.28);
+      --badge-bg: rgba(159, 122, 234, 0.14);
+      --badge-border: rgba(183, 148, 244, 0.24);
+      --badge-text: #d6bcfa;
+      --ok: #4ade80;
+      --warn: #fbbf24;
+      --weak: #f87171;
+      --bar-track: rgba(255, 255, 255, 0.08);
+      --shadow: 0 26px 56px -14px rgba(4, 2, 10, 0.75);
+      --night-sky-opacity: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px;
+      position: relative;
+      overflow-x: hidden;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .glow-top {
+      pointer-events: none;
+      position: fixed;
+      top: -120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 560px;
+      height: 290px;
+      border-radius: 9999px;
+      background: var(--bg-glow-1);
+      filter: blur(85px);
+      z-index: 0;
+      transition: background 0.25s ease;
+    }
+
+    .glow-bottom {
+      pointer-events: none;
+      position: fixed;
+      bottom: -40px;
+      right: -20px;
+      width: 300px;
+      height: 300px;
+      border-radius: 9999px;
+      background: var(--bg-glow-2);
+      filter: blur(85px);
+      z-index: 0;
+      transition: background 0.25s ease;
+    }
+
+    .night-sky {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: var(--night-sky-opacity);
+      transition: opacity 0.35s ease;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 9999px;
+      background: #f3e8ff;
+    }
+
+    .star.s1 { width: 2px; height: 2px; top: 11%; left: 16%; opacity: 0.45; }
+    .star.s2 { width: 3px; height: 3px; top: 18%; right: 20%; opacity: 0.35; }
+    .star.s3 { width: 2px; height: 2px; top: 34%; left: 9%; opacity: 0.28; }
+    .star.s4 { width: 2px; height: 2px; bottom: 24%; left: 18%; opacity: 0.32; }
+    .star.s5 { width: 3px; height: 3px; bottom: 16%; right: 14%; opacity: 0.38; }
+    .star.s6 { width: 2px; height: 2px; top: 52%; right: 10%; opacity: 0.25; }
+
+    .crescent {
+      position: absolute;
+      top: 44px;
+      right: 48px;
+      width: 28px;
+      height: 28px;
+      border-radius: 9999px;
+      box-shadow: inset -6px 2px 0 0 rgba(233, 213, 255, 0.22);
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 450px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding: 0 2px;
+    }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 9999px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      padding: 5px 11px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+    }
+
+    .theme-toggle:active {
+      transform: scale(0.98);
+    }
+
+    .theme-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 9999px;
+      background: var(--accent);
+    }
+
+    .card {
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 36px 28px 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card::before {
+      content: "";
+      pointer-events: none;
+      position: absolute;
+      inset: 10px;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      z-index: 1;
+    }
+
+    @media (min-width: 640px) {
+      .card {
+        padding: 40px 36px 32px;
+      }
+    }
+
+    .corner-mark {
+      pointer-events: none;
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      color: var(--accent);
+      opacity: 0.55;
+      z-index: 2;
+    }
+
+    .corner-mark.tl { top: 6px; left: 6px; }
+    .corner-mark.tr { top: 6px; right: 6px; transform: rotate(90deg); }
+    .corner-mark.br { bottom: 6px; right: 6px; transform: rotate(180deg); }
+    .corner-mark.bl { bottom: 6px; left: 6px; transform: rotate(270deg); }
+
+    .clean-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 18px 0 4px;
+      color: var(--accent);
+      opacity: 0.45;
+    }
+
+    .clean-divider::before,
+    .clean-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, currentColor, transparent);
+    }
+
+    .clean-divider span {
+      width: 6px;
+      height: 6px;
+      background: currentColor;
+      transform: rotate(45deg);
+      border-radius: 1px;
+    }
+
+    .header,
+    form,
+    .card-footer {
+      position: relative;
+      z-index: 2;
+    }
+
+    .header {
+      margin-bottom: 20px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: var(--text-strong);
+    }
+
+    .badge {
+      border: 1px solid var(--badge-border);
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      border-radius: 7px;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 17px;
+    }
+
+    .field-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    label.field-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .field-hint {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      padding: 10px 14px;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.25s ease;
+    }
+
+    input::placeholder {
+      color: var(--text-dim);
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-ring);
+    }
+
+    .strength-bar {
+      margin-top: 8px;
+      height: 4px;
+      width: 100%;
+      border-radius: 9999px;
+      background: var(--bar-track);
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 9999px;
+      background: var(--weak);
+      transition: width 0.2s ease, background-color 0.2s ease;
+    }
+
+    .password-meta {
+      margin-top: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .char-count.valid {
+      color: var(--ok);
+      font-weight: 500;
+    }
+
+    .feedback-msg {
+      margin-top: 6px;
+      font-size: 12px;
+      min-height: 15px;
+      color: var(--text-dim);
+    }
+
+    .feedback-msg.error {
+      color: var(--weak);
+    }
+
+    .feedback-msg.ok {
+      color: var(--ok);
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    input[type="checkbox"] {
+      margin-top: 2px;
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .inline-link {
+      color: var(--badge-text);
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .inline-link:hover {
+      text-decoration: underline;
+    }
+
+    .submit-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      padding: 11px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 10px 24px -6px var(--accent-shadow);
+      transition: background 0.15s ease, opacity 0.15s ease, transform 0.1s ease;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background: linear-gradient(90deg, var(--accent-hover-1), var(--accent-hover-2));
+    }
+
+    .submit-btn:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .card-footer {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer-action {
+      background: none;
+      border: none;
+      padding: 0;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--badge-text);
+      cursor: pointer;
+    }
+
+    .footer-action:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-top"></div>
+  <div class="glow-bottom"></div>
+
+  <div class="night-sky" aria-hidden="true">
+    <span class="crescent"></span>
+    <span class="star s1"></span>
+    <span class="star s2"></span>
+    <span class="star s3"></span>
+    <span class="star s4"></span>
+    <span class="star s5"></span>
+    <span class="star s6"></span>
+  </div>
+
+  <main class="wrapper">
+    <div class="top-bar">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false">
+        <span class="theme-indicator"></span>
+        <span id="themeLabel">Modo noturno</span>
+      </button>
+    </div>
+
+    <section class="card" aria-label="Criar conta no BurNot">
+      <svg class="corner-mark tl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 16V8a4 4 0 0 1 4-4h8" />
+        <polygon points="8,6 10,8 8,10 6,8" fill="currentColor" stroke="none" />
+      </svg>
+      <svg class="corner-mark tr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 16V8a4 4 0 0 1 4-4h8" />
+        <polygon points="8,6 10,8 8,10 6,8" fill="currentColor" stroke="none" />
+      </svg>
+      <svg class="corner-mark br" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 16V8a4 4 0 0 1 4-4h8" />
+        <polygon points="8,6 10,8 8,10 6,8" fill="currentColor" stroke="none" />
+      </svg>
+      <svg class="corner-mark bl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 16V8a4 4 0 0 1 4-4h8" />
+        <polygon points="8,6 10,8 8,10 6,8" fill="currentColor" stroke="none" />
+      </svg>
+
+      <header class="header">
+        <div class="header-top">
+          <h1>BurNot</h1>
+          <span class="badge">Criar conta</span>
+        </div>
+        <p class="subtitle">
+          Monte seu espaço pessoal para organizar sessões, notas e ritmos com calma.
+        </p>
+
+        <div class="clean-divider" aria-hidden="true">
+          <span></span>
+        </div>
+      </header>
+
+      <form id="signupForm" novalidate>
+        <div>
+          <div class="field-top">
+            <label for="name" class="field-label">Nome</label>
+            <span class="field-hint">Como você será chamado</span>
+          </div>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            placeholder="Seu nome completo"
+          />
+        </div>
+
+        <div>
+          <div class="field-top">
+            <label for="email" class="field-label">E-mail</label>
+            <span class="field-hint">Para acesso e recuperação</span>
+          </div>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            placeholder="voce@exemplo.com"
+          />
+        </div>
+
+        <div>
+          <div class="field-top">
+            <label for="password" class="field-label">Senha</label>
+            <span class="field-hint" id="strengthText">Sem senha</span>
+          </div>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            placeholder="Crie uma senha"
+          />
+          <div class="strength-bar">
+            <div class="strength-fill" id="strengthFill"></div>
+          </div>
+          <div class="password-meta">
+            <span>Mínimo recomendado: 8 caracteres</span>
+            <span class="char-count" id="charCount">0 caracteres</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="field-top">
+            <label for="confirmPassword" class="field-label">Confirmar senha</label>
+          </div>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            required
+            placeholder="Digite a senha novamente"
+          />
+          <div class="feedback-msg" id="matchFeedback"></div>
+        </div>
+
+        <label class="checkbox-label">
+          <input type="checkbox" id="terms" required />
+          <span>
+            Concordo com os <a href="#termos" class="inline-link">Termos de Uso</a> e a
+            <a href="#privacidade" class="inline-link">Política de Privacidade</a>.
+          </span>
+        </label>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          Criar conta no BurNot
+        </button>
+
+        <div class="feedback-msg" id="formFeedback"></div>
+      </form>
+
+      <div class="card-footer">
+        <span>Já tem uma conta?</span>
+        <button type="button" class="footer-action" id="goToLoginBtn">
+          Entrar agora →
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const themeToggle = document.getElementById("themeToggle");
+    const themeLabel = document.getElementById("themeLabel");
+    const passwordInput = document.getElementById("password");
+    const confirmInput = document.getElementById("confirmPassword");
+    const charCount = document.getElementById("charCount");
+    const strengthFill = document.getElementById("strengthFill");
+    const strengthText = document.getElementById("strengthText");
+    const matchFeedback = document.getElementById("matchFeedback");
+    const formFeedback = document.getElementById("formFeedback");
+    const signupForm = document.getElementById("signupForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    themeToggle.addEventListener("click", () => {
+      const isNight = document.body.classList.toggle("night-mode");
+      themeToggle.setAttribute("aria-pressed", String(isNight));
+      themeLabel.textContent = isNight ? "Modo claro" : "Modo noturno";
+    });
+
+    function updatePasswordStrength() {
+      const val = passwordInput.value;
+      const len = val.length;
+      charCount.textContent = `${len} ${len === 1 ? "caractere" : "caracteres"}`;
+      charCount.classList.toggle("valid", len >= 8);
+
+      let score = 0;
+      if (len >= 6) score += 1;
+      if (len >= 8) score += 1;
+      if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score += 1;
+      if (/[^A-Za-z0-9]/.test(val)) score += 1;
+
+      if (len === 0) {
+        strengthFill.style.width = "0%";
+        strengthText.textContent = "Sem senha";
+        strengthText.style.color = "";
+      } else if (score <= 1) {
+        strengthFill.style.width = "30%";
+        strengthFill.style.background = "var(--weak)";
+        strengthText.textContent = "Fraca";
+        strengthText.style.color = "var(--weak)";
+      } else if (score <= 2) {
+        strengthFill.style.width = "62%";
+        strengthFill.style.background = "var(--warn)";
+        strengthText.textContent = "Razoável";
+        strengthText.style.color = "var(--warn)";
+      } else {
+        strengthFill.style.width = "100%";
+        strengthFill.style.background = "var(--ok)";
+        strengthText.textContent = "Forte";
+        strengthText.style.color = "var(--ok)";
+      }
+
+      checkPasswordMatch();
+    }
+
+    function checkPasswordMatch() {
+      const pass = passwordInput.value;
+      const confirm = confirmInput.value;
+
+      if (!confirm) {
+        matchFeedback.textContent = "";
+        matchFeedback.className = "feedback-msg";
+        return true;
+      }
+
+      if (pass === confirm) {
+        matchFeedback.textContent = "As senhas coincidem.";
+        matchFeedback.className = "feedback-msg ok";
+        return true;
+      } else {
+        matchFeedback.textContent = "As senhas não coincidem.";
+        matchFeedback.className = "feedback-msg error";
+        return false;
+      }
+    }
+
+    passwordInput.addEventListener("input", updatePasswordStrength);
+    confirmInput.addEventListener("input", checkPasswordMatch);
+
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      formFeedback.textContent = "";
+      formFeedback.className = "feedback-msg";
+
+      const nome = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const senha = passwordInput.value;
+      const terms = document.getElementById("terms").checked;
+
+      if (!nome || !email || !senha) {
+        formFeedback.textContent = "Preencha nome, e-mail e senha para continuar.";
+        formFeedback.className = "feedback-msg error";
+        return;
+      }
+
+      if (senha.length < 6) {
+        formFeedback.textContent = "A senha deve ter pelo menos 6 caracteres.";
+        formFeedback.className = "feedback-msg error";
+        return;
+      }
+
+      if (!checkPasswordMatch()) {
+        formFeedback.textContent = "Confira a confirmação da senha antes de enviar.";
+        formFeedback.className = "feedback-msg error";
+        return;
+      }
+
+      if (!terms) {
+        formFeedback.textContent = "Marque a caixa dos termos para criar sua conta.";
+        formFeedback.className = "feedback-msg error";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Criando conta...";
+
+      try {
+        const resposta = await fetch("/cadastro", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome, email, senha })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+          formFeedback.textContent = dados.erro || "Erro ao cadastrar usuário.";
+          formFeedback.className = "feedback-msg error";
+          return;
+        }
+
+        formFeedback.textContent = `Conta criada e salva no banco para ${nome}!`;
+        formFeedback.className = "feedback-msg ok";
+        signupForm.reset();
+        updatePasswordStrength();
+      } catch (erro) {
+        formFeedback.textContent = "Não foi possível conectar ao servidor Node.";
+        formFeedback.className = "feedback-msg error";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Criar conta no BurNot";
+      }
+    });
+  </script>
+</body>
+</html>
